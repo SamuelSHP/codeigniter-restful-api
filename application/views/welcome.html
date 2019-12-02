@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>RESTful API - VueJS</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css" integrity="sha256-BJ/G+e+y7bQdrYkS2RBTyNfBHpA9IuGaPmf9htub5MQ=" crossorigin="anonymous" />
+
+  <style type="text/css">
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity 1s;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+      opacity: 0;      
+    }
+  </style>
+
+</head>
+<body>
+<div id="app">
+  <div class="container">
+    
+    <!-- Text field input todo -->
+    <!-- <div class="row mt-1">
+      <div class="col-md-12">
+          <div class="input-group mb-3">            
+            <input type="text" class="form-control" placeholder="What would you do?" name="txaRandomThinkInput">
+            <div class="input-group-append">
+              <button class="btn btn-primary" type="button">
+                <span class="iconic" data-glyph="star" title="star" aria-hidden="true"></span>
+              Add</button>
+            </div>
+          </div>
+      </div>
+    </div> -->
+
+    <!-- TOdo List -->
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <div class="card-columns">
+        	<product_list v-for="(product, index) in products" v-bind:key="index" v-bind:item="product"></product_list>
+        </div>        
+        <p v-if="products == null">
+        	{{message}}
+        </p>        
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script type="text/javascript">
+
+Vue.component('product_list',{
+	template: `<div class="card">				
+	            <div class="card-body">
+	            	<h5 class="card-title">{{item.product_name}}</h5>
+            	    <a href="#" class="card-link">Card link</a>
+            	    <a href="#" class="card-link">Another link</a>
+	            </div>
+	           </div>`,
+	props: ['item']
+});
+
+var app = new Vue({
+  el: '#app',
+  data: function(){
+    return {   
+      products: null,
+      message: null
+    }
+  },
+  mounted(){
+  	axios
+  	.get('http://localhost/shopee/api/product_list')
+  	.then(response => {
+  		var result = response.data;  		
+  		if (result.success) {
+  			this.products = result.data;
+  		}else{  			
+  			this.message = result.message;
+  		}
+  	})
+  	.catch(error => {
+  		console.log(error);
+  	});
+  }
+})
+</script>
+
+</html>
